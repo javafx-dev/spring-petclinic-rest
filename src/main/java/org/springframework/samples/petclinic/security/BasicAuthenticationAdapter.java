@@ -26,7 +26,7 @@ public class BasicAuthenticationAdapter extends WebSecurityConfigurerAdapter {
                 .antMatchers("/securityNone").permitAll()
                 .anyRequest().authenticated()
                 .and()
-            .httpBasic().and()
+            .formLogin().and()
             .csrf().disable();
     }
 
