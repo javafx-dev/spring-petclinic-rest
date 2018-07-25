@@ -4,15 +4,20 @@ import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.autoconfigure.security.oauth2.client.EnableOAuth2Sso;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 
 @Configuration
 @EnableWebSecurity
+@EnableOAuth2Sso
+@EnableResourceServer
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 @ConditionalOnProperty( "basic.authentication.enabled" )
 public class BasicAuthenticationAdapter extends WebSecurityConfigurerAdapter {
@@ -26,13 +31,14 @@ public class BasicAuthenticationAdapter extends WebSecurityConfigurerAdapter {
                 .antMatchers("/ws/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
-            .formLogin().and()
             .csrf().disable();
     }
 
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
         auth
+            //.inMemoryAuthentication().withUser("javafx-dev").roles("OWNER_ADMIN");
+
             .jdbcAuthentication()
                 .dataSource(dataSource)
                 .usersByUsernameQuery("select username,password,enabled from users where username=?")
