@@ -17,7 +17,6 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.E
 @Configuration
 @EnableWebSecurity
 @EnableOAuth2Sso
-@EnableResourceServer
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 @ConditionalOnProperty( "basic.authentication.enabled" )
 public class BasicAuthenticationAdapter extends WebSecurityConfigurerAdapter {
